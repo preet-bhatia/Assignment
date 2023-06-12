@@ -18,10 +18,18 @@ end
 def fetch_data(num_of_movie)
     arr = Scrape.fetch_movie_urls(num_of_movie)
     movies = {}
-    num_of_movie.times do |ind|
-        data = Scrape.scrape_movie(arr[ind])
-        movie = Movie.new(data[0],data[1])
-        movies[ind+1] = movie
+    # breaking the url's array so spawn max
+    # 100 threads at once
+    arr.each_slice(100) do |group|
+        threads = []
+        group.each do |url|
+            threads << Thread.new do     
+                data = Scrape.scrape_movie(url)
+                movie = Movie.new(data[0],data[1])
+                movies[arr.index(url)+1] = movie
+            end
+        end
+        threads.map(&:join)
     end
     return movies
 end
