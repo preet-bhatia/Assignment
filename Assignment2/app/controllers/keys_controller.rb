@@ -3,32 +3,27 @@ class KeysController < ApplicationController
     
     def new
         token = SecureRandom.hex(5)
-        @key = Key.new( key_id:token, status:"FREE", last_alive_at: Time.now, timestamp: Time.now)
-        @key.save
+        @key = Key.create( key_id:token, status:"FREE", last_alive_at: Time.now, timestamp: Time.now)
     end
 
     def unblock
         @key = Key.find_by( key_id:params[:id] )
         if @key
-            @key.status = "FREE"
-            @key.timestamp = Time.now
-            @key.save
+            set_status(@key, "FREE")
         end
     end
 
     def destroy
         @key = Key.find_by( key_id:params[:id] )
         if @key
-            @key.destroy
+            delete_key(@key)
         end
     end
 
     def available
         @key = Key.find_by( status: "FREE" )
         if @key
-            @key.status = "BLOCKED"
-            @key.timestamp = Time.now
-            @key.save
+            set_status(@key, "BLOCKED")
         end
     end
 
@@ -41,6 +36,16 @@ class KeysController < ApplicationController
     end
     
     private
+
+    def delete_key(key)
+        key.destroy
+    end
+
+    def set_status(key, new_status)
+        key.status = new_status
+        key.timestamp = Time.now
+        key.save
+    end
 
     def background_task
         Thread.new do
@@ -55,10 +60,9 @@ class KeysController < ApplicationController
         keys = Key.all
         keys.each do |key|
             if key.status == "BLOCKED" && Time.now - key.timestamp > 60
-                key.status = "FREE"
-                key.save
+                set_status(key, "FREE")
             elsif Time.now - key.last_alive_at > 300
-                key.destroy
+                delete_key(key)
             end
         end
     end
