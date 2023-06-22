@@ -1,8 +1,10 @@
 class Key < ApplicationRecord
+    enum status: { free: 0, blocked: 1 }
+    validates :key_id, :status, :timestamp, :last_alive_at, presence: true
 
     def self.generate_new_key
         token = SecureRandom.hex(5)
-        key = Key.create( key_id:token, status:"FREE", last_alive_at: Time.now, timestamp: Time.now) 
+        key = Key.create( key_id:token, status: :free, last_alive_at: Time.now, timestamp: Time.now) 
     end
 
     def self.find_by_id(id)

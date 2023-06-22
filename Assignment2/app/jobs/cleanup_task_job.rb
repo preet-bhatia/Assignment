@@ -9,8 +9,8 @@ class CleanupTaskJob < ApplicationJob
     def update_keys
         keys = Key.all
         keys.each do |key|
-            if key.status == "BLOCKED" && Time.now - key.timestamp > 60
-                key.set_status("FREE")
+            if key.status == "blocked" && Time.now - key.timestamp > 60
+                key.set_status(:free)
             elsif Time.now - key.last_alive_at > 300
                 key.delete_key
             end

@@ -52,6 +52,11 @@ GEM
     concurrent-ruby (1.2.2)
     crass (1.0.6)
     date (3.3.3)
+    delayed_job (4.1.11)
+      activesupport (>= 3.0, < 8.0)
+    delayed_job_active_record (4.1.7)
+      activerecord (>= 3.0, < 8.0)
+      delayed_job (>= 3.0, < 5)
     erubis (2.7.0)
     execjs (2.8.1)
     ffi (1.15.5)
@@ -176,6 +181,7 @@ PLATFORMS
 DEPENDENCIES
   byebug
   coffee-rails (~> 4.2)
+  delayed_job_active_record
   jbuilder (~> 2.5)
   jquery-rails
   listen (~> 3.0.5)
