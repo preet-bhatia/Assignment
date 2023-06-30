@@ -1,0 +1,53 @@
+<div class= "container">
+    <% if @user.errors.any? %>
+        <h2>The following errors prevented creation of users</h2>
+        <ul>
+        <% @user.errors.full_messages.each do |msg|%>
+            <li><%= msg%></li>
+        <%end%>
+        </ul>
+    <%end %>
+
+    <%= form_for (@user) do |f| %>
+        <%= f.label :name%>
+        <%= f.text_field :name%>
+
+        <%= f.label :email%>
+        <%= f.email_field :email%>
+
+        <%= f.label :username%>
+        <%= f.text_field :username%>
+
+        <%= f.label :dob%>
+        <%= f.date_field :dob, max: Date.today%>
+
+        <%= f.label :mobile%>
+        <%= f.text_field :mobile%>
+
+        <%= f.label :password%>
+        <%= f.password_field :password%>
+
+        <%= fields_for :address, @user.address do |ff| %>
+
+            <%= ff.label :address1%>
+            <%= ff.text_area :address1%>
+
+            <%= ff.label :district%>
+            <%= ff.text_field :district%>
+
+            <%= ff.label :state%>
+            <%= ff.text_field :state%>
+
+            <%= ff.label :country%>
+            <%= ff.text_field :country%>
+
+            <%= ff.label :postal_code%>
+            <%= ff.text_field :postal_code%>
+
+        <% end%>
+
+        <%= f.submit %>
+
+        <% end %>
+
+</div>

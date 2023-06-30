@@ -1,0 +1,37 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<a class="navbar-brand" href="#">OPERATIONS : </a>
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <%= link_to "Deposit", credit_path, class: "nav-link"%>
+                </li>
+                <li class="nav-item">
+                    <%= link_to "Withdrawal", debit_path, class: "nav-link"%>
+                </li>
+                <% if obj.account_type == 'current' %>
+                <li class="nav-item">
+                    <%= link_to "Transfer", transfer_path, class: "nav-link"%>
+                </li>
+                <% end %>
+                <li class="nav-item">
+                    <%= link_to "View Passbook", transactions_path, class: "nav-link"%>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br>
+<div class= "container">
+    <div class="card text-white bg-success mb-3" style="max-width: 28rem;">
+        <div class="card-header">
+            Account Details
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Account Number: <%= obj.account_number %></h5>
+            <h5 class="card-title">Account Balance: <%= obj.balance %></h5>
+            <h5 class="card-title">Account Opening Date: <%= obj.created_at.strftime("%Y-%m-%d") %></h5>    
+        </div>
+    </div>
+</div>
+<br>

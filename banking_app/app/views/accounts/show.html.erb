@@ -1,0 +1,5 @@
+<br>
+<%= render 'operations' , obj: @account %>
+<% if @account.account_type == "saving" %>
+    <%= render 'card' , card: @account.atm_card %>
+<% end %>

@@ -1,0 +1,26 @@
+<h1> Passbook </h1>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Date & Time</th>
+      <th scope="col">Type</th>
+      <th scope="col">Amount</th>
+      <th scope="col">Current Balance</th>
+      <th scope="col">Comment</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @transactions.each_with_index do |transaction,ind| %>
+        <tr>
+            <th scope="row"><%= "#{ind+1}" %></th>
+            <td><%= transaction.created_at.strftime("%d-%m-%Y %k:%M") %></td>
+            <td><%= transaction.transaction_type.upcase %></td>
+            <td><%= transaction.amount %></td>
+            <td><%= transaction.current_balance %></td>
+            <td><%= transaction.transaction_type == 'transfer'? "Account Related: #{transaction.account_related}" : ''%></td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= link_to "Back to Account", account_path(current_account.id)%>

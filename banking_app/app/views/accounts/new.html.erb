@@ -1,0 +1,26 @@
+<h1> Create New Account </h1>
+<div class= "container">
+
+    <% if @account.errors.any? %>
+        <h2>The following errors prevented creation of Accounts</h2>
+        <ul>
+        <% @account.errors.full_messages.each do |msg|%>
+            <li><%= msg%></li>
+        <%end%>
+        </ul>
+    <%end %>
+
+    <%= form_for (@account) do |f| %>
+
+        <%= f.label :account_type%>
+        <% accounts_array = [["Saving", "saving"], ["Current","current"]] %>
+        <%= f.select :account_type, options_for_select(accounts_array, @account.account_type) %>
+        
+        <%= f.label :balance%>
+        <%= f.text_field :balance%>
+
+        <%= f.submit %>
+
+    <% end %>
+
+</div>

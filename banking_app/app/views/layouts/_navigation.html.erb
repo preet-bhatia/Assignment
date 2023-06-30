@@ -1,0 +1,34 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<a class="navbar-brand" href="#">Banking App</a>
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <% if logged_in? %>
+                    <a class="navbar-brand" href="#">Welcome <%= current_user.name%> ( CUSTOMER_ID: <%= current_user.customer_id%>)</a>
+                    <li class="nav-item">
+                        <%= link_to "Home", user_path(current_user.id), class: "nav-link"%>
+                    </li>
+                    <li class="nav-item">
+                        <%= link_to "Create New Account", new_account_path, class: "nav-link"%>
+                    </li>
+                    <li class="nav-item">
+                        <%= link_to "Create New Loan Account", new_loan_account_info_path, class: "nav-link"%>
+                    </li>
+                    <li class="nav-item">
+                        <%= link_to "Loan Accounts",loan_account_infos_path, class: "nav-link"%>
+                    </li>
+                    <li class="nav-item">
+                        <%= link_to "LogOut", logout_path, class: "nav-link", method: :delete, data: {confirm: "Are you sure?"}%>
+                    </li>
+                <%else%>
+                    <li class="nav-item">
+                        <%= link_to "Login", login_path, class: "nav-link"%>
+                    </li>
+                    <li class="nav-item">
+                        <%= link_to "SignUp", new_user_path, class: "nav-link"%>
+                    </li>
+                <%end%>
+            </ul>
+        </div>
+    </div>
+</nav>
