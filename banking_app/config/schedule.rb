@@ -21,20 +21,12 @@
 
 set :output, "/log/cron_log.log"
 
-every 1.minute do
-    runner "Account.calculate_interest_saving_account_per_month"
-end
-
 every 1.month do
-    runner "Account.calculate_interest_saving_account_per_month"
+    runner "Account.calculate_nrv_and_interest"
 end
 
 every 1.month do
     runner "Account.min_transaction_for_current_accounts_per_month"
-end
-
-every 1.month do
-    runner "Account.calculate_nrv"
 end
 
 every 1.day do

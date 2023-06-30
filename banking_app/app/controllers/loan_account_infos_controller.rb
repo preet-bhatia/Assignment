@@ -11,6 +11,7 @@ class LoanAccountInfosController < ApplicationController
             flash[:notice] = "Congrats , new loan account created with account number #{account.account_number}"
             redirect_to loan_account_info_path(account)
         else
+            account.destroy
             render 'new'
         end
     end

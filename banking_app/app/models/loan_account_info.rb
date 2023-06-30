@@ -3,7 +3,6 @@ class LoanAccountInfo < ApplicationRecord
     belongs_to :account, foreign_key: 'account_number', primary_key: 'account_number'
     validate :check_eligibility_for_loan_account
     validates :loan_type, :amount, :duration, presence: true
-
     MINIMUM_AGE_LIMIT = 25
     HOME_LOAN_INTEREST_RATE = 7
     CAR_LOAN_INTEREST_RATE = 8
