@@ -58,10 +58,10 @@ class Account < ApplicationRecord
         ((Time.zone.now - dob.to_time) / 1.year.seconds).floor
     end
 
-    def min_transaction_for_current_accounts_per_month
+    def self.min_transaction_for_current_accounts_per_month
         accounts = Account.where(account_type:'current')
         accounts.each do |account|
-            transactions = account.transactions.where(transaction_type: ['deposit','bank_withdrawal'])
+            transactions = account.transactions.where(transaction_type: ['deposit','bank_withdrawal','transfer'])
             if transactions.length < MINIMUM_TRANSACTIONS_CURRENT_ACCOUNT
                 charge = -PENALTY_FOR_LESS_TRANSACTIONS
                 transaction = Transaction.new(amount:charge,account_number:account.account_number, transaction_type: 4,current_balance:account.balance+charge)
@@ -70,15 +70,14 @@ class Account < ApplicationRecord
         end
     end
 
-    def calculate_nrv_and_interest
+    def self.calculate_nrv_and_interest
         number_of_days_in_month = (Time.now - 3.hours).end_of_month.day
         accounts = Account.where(account_type: ['saving','current'])
         accounts.each do |account|
-            account_value = get_account_value(account)
             account_value = CalculateAccountValue.call(account_number: account.account_number, month_days:number_of_days_in_month)
             nrv = account_value / number_of_days_in_month
             if account.account_type == 'saving'
-                total_interest = account_value * (INTEREST_RATE_FOR_SAVING_ACCOUNT/100) * (1/365)
+                total_interest = (account_value * (INTEREST_RATE_FOR_SAVING_ACCOUNT/100.0) * (1/365.0)).round(2)
                 transaction = Transaction.new(amount:total_interest,account_number:account.account_number, transaction_type: 4,current_balance:account.balance+total_interest)
                 transaction.save
                 if nrv < NRV_SAVING

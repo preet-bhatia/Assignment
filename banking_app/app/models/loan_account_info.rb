@@ -22,7 +22,7 @@ class LoanAccountInfo < ApplicationRecord
         ((Time.zone.now - dob.to_time) / 1.year.seconds).floor
       end
 
-    def add_interest_for_loan_accounts
+    def self.add_interest_for_loan_accounts
         accounts = Account.where(account_type:'loan')
         accounts.each do |account|
             loan_info = account.loan_account_info
@@ -40,7 +40,7 @@ class LoanAccountInfo < ApplicationRecord
                     else  
                         interest = 0
                 end  
-                value = loan_account_info.amount * (1 + interest.to_f / (100 * COMPOUNDING_RATE))**(loan_info.duration * COMPOUNDING_RATE)
+                value = loan_info.amount * (1 + interest.to_f / (100 * COMPOUNDING_RATE))**(loan_info.duration * COMPOUNDING_RATE)
                 loan_info.amount = value
                 loan_info.save
             end
