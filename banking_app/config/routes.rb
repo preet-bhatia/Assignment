@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   post 'login', to: 'sessions#create'
   delete 'logout', to: 'sessions#destroy'
   resources :accounts, only: [:new, :create, :show]
-  resources :loan_account_infos, only: [:new, :create, :show, :index]
+  resources :loan_account_infos, only: [:new, :create, :index]
   get 'transactions', to: 'transactions#index', as: 'transactions'
   get 'debit', to: 'transactions#withdrawal'
   post 'debit', to: 'transactions#debit'

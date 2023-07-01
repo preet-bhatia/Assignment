@@ -1,4 +1,6 @@
 class TransactionsController < ApplicationController
+    before_action :require_user
+    before_action :current_account, only: [:debit, :credit, :index]
     before_action :generate_transaction, only: [:deposit, :withdrawal, :transfer]
     before_action :create_transaction, only: [:debit, :credit]
     
@@ -14,7 +16,7 @@ class TransactionsController < ApplicationController
     def debit
         if @transaction.save
             flash[:notice] = "Congrats , successfully debited"
-            redirect_to current_account
+            redirect_to @current_account
         else
             @transaction.amount = @transaction.amount.abs
             if @transaction.transaction_type == 'transfer' 
@@ -27,12 +29,12 @@ class TransactionsController < ApplicationController
     
     def credit
         if @transaction.save
-            if current_account.account_type == 'loan'
+            if @current_account.account_type == 'loan'
                 flash[:notice] = "Congrats , successfully depoisted installment to loan account"
-                redirect_to loan_account_info_path(current_account.id)
+                redirect_to account_path(@current_account)
             else
                 flash[:notice] = "Congrats , successfully credited"
-                redirect_to current_account
+                redirect_to @current_account
             end
         else
             render 'deposit'
@@ -40,7 +42,7 @@ class TransactionsController < ApplicationController
     end
     
     def index
-        @transactions = current_account.transactions
+        @transactions = @current_account.transactions
     end
     private
 
@@ -57,7 +59,7 @@ class TransactionsController < ApplicationController
         if(@transaction.transaction_type != 'deposit')
             @transaction.amount = -1 * @transaction.amount
         end
-        @transaction.account_number = current_account.account_number
-        @transaction.current_balance = current_account.balance + @transaction.amount
+        @transaction.account_number = @current_account.account_number
+        @transaction.current_balance = @current_account.balance + @transaction.amount
     end
 end

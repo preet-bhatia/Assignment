@@ -38,6 +38,7 @@ class Account < ApplicationRecord
             transaction = Transaction.create(amount:self.balance, account_number:self.account_number, transaction_type:'deposit', current_balance:self.balance)
         end
     end
+
     def validity_of_minimum_account_balance
         minimum_account_balance = -1
         if self.account_type == 'saving'

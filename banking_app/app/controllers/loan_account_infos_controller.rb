@@ -1,4 +1,5 @@
 class LoanAccountInfosController < ApplicationController
+    before_action :require_user, only: [:show]
     def new
         @loanaccount = LoanAccountInfo.new
     end
@@ -9,16 +10,11 @@ class LoanAccountInfosController < ApplicationController
         @loanaccount.account_number = account.account_number
         if @loanaccount.save
             flash[:notice] = "Congrats , new loan account created with account number #{account.account_number}"
-            redirect_to loan_account_info_path(account)
+            redirect_to account_path(account)
         else
             account.destroy
             render 'new'
         end
-    end
-    
-    def show
-        @account = Account.find(params[:id])
-        session[:account_number] = @account.account_number
     end
     
     def index

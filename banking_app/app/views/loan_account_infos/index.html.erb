@@ -5,7 +5,7 @@
 <div class="col-8 mt-4">
   <div class="card text-center shadow mb-5 bg-body-tertiary rounded">
     <div class="card-header">
-      <%= link_to "Loan Account #{index+1}", loan_account_info_path(account)%>
+      <%= link_to "Loan Account #{index+1}", account_path(account)%>
     </div>
     <div class="card-body">
       <h5 class="card-title"><%=account.account_number%></h5>

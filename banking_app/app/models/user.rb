@@ -18,6 +18,11 @@ class User < ApplicationRecord
         self.username = username.downcase
     end
 
+    def get_address_params(address)
+        address[:customer_id] = self.customer_id
+        address
+    end
+
     def get_customer_id
         # logic for setting customer_id
         arr = Array.new(26,0)
