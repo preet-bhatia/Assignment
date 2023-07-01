@@ -3,12 +3,16 @@ class LoanAccountInfo < ApplicationRecord
     belongs_to :account, foreign_key: 'account_number', primary_key: 'account_number'
     validate :check_eligibility_for_loan_account
     validates :loan_type, :amount, :duration, presence: true
+    MINIMUM_LOAN_AMOUNT = 500000
+    MINIMUM_LOAN_DURATION = 2
     MINIMUM_AGE_LIMIT = 25
     HOME_LOAN_INTEREST_RATE = 7
     CAR_LOAN_INTEREST_RATE = 8
     PERSONAL_LOAN_INTEREST_RATE = 12
     BUSINESS_LOAN_INTEREST_RATE = 15
     COMPOUNDING_RATE = 2
+    validates_numericality_of :amount, greater_than_or_equal_to: MINIMUM_LOAN_AMOUNT
+    validates_numericality_of :duration, greater_than_or_equal_to: MINIMUM_LOAN_DURATION
 
     def check_eligibility_for_loan_account
         if self.account.user.accounts.find_by(account_type: ['saving', 'current']).nil?

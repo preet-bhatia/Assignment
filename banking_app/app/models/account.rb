@@ -5,7 +5,6 @@ class Account < ApplicationRecord
     validates :account_type, :balance, presence: true
     validate :validity_of_minimum_account_balance, on: :create
     validate :validity_of_age
-    validates :balance, presence: true
     MINIMUM_CURRENT_ACCOUNT_BALANCE = 100000
     MINIMUM_SAVING_ACCOUNT_BALANCE = 10000
     MINIMUM_AGE_CURRENT_ACCOUNT = 18

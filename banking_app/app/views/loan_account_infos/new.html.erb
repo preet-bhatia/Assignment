@@ -15,10 +15,10 @@
         <%= f.select :loan_type, options_for_select(LoanAccountInfo.loan_types.map {|key, value| [key.titleize, LoanAccountInfo.loan_types.key(value)]}, @loanaccount.loan_type) %>
 
         <%= f.label :amount%>
-        <%= f.number_field :amount, {min: 500000}%>
+        <%= f.number_field :amount%>
 
         <%= f.label :duration%>
-        <%= f.number_field :duration, {min: 2}%>
+        <%= f.number_field :duration%>
 
         <%= f.submit %>
 
