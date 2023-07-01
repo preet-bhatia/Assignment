@@ -1,5 +1,5 @@
 class AccountsController < ApplicationController
-    before_action :require_user, only: [:show]
+    before_action :require_user
     before_action :current_user, except: [:new]
     def new
         @account = Account.new
