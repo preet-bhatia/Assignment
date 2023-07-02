@@ -1,19 +1,21 @@
 class TransactionsController < ApplicationController
     before_action :require_user
-    before_action :current_account, only: [:debit, :credit, :index]
+    before_action :require_account
     before_action :generate_transaction, only: [:deposit, :withdrawal, :transfer]
-    before_action :create_transaction, only: [:debit, :credit]
     
     def deposit
     end
     
     def withdrawal
+        validate_account_type(['loan'])
     end
     
     def transfer
+        validate_account_type(['saving','loan'])
     end
     
     def debit
+        @transaction = Transaction.create_transaction(transaction_params, @current_account)
         if @transaction.save
             flash[:notice] = "Congrats , successfully debited"
             redirect_to @current_account
@@ -28,6 +30,7 @@ class TransactionsController < ApplicationController
     end
     
     def credit
+        @transaction = Transaction.create_transaction(transaction_params, @current_account)
         if @transaction.save
             if @current_account.account_type == 'loan'
                 flash[:notice] = "Congrats , successfully depoisted installment to loan account"
@@ -53,13 +56,11 @@ class TransactionsController < ApplicationController
     def generate_transaction
         @transaction = Transaction.new
     end
-    
-    def create_transaction
-        @transaction = Transaction.new(transaction_params)
-        if(@transaction.transaction_type != 'deposit')
-            @transaction.amount = -1 * @transaction.amount
+
+    def validate_account_type(invalid_account_types)
+        if invalid_account_types.include?(@current_account.account_type)
+            flash[:alert] = "Requested facility not found for this account"
+            redirect_to @current_account
         end
-        @transaction.account_number = @current_account.account_number
-        @transaction.current_balance = @current_account.balance + @transaction.amount
     end
 end

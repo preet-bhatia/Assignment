@@ -21,4 +21,10 @@ class ApplicationController < ActionController::Base
     flash[:alert] = "Requested details not found for user"
     redirect_to current_user
   end
+  def require_account
+    if !(!!current_account)
+      flash[:alert] = "No account found to perform this action"
+      redirect_to current_user
+    end
+  end
 end

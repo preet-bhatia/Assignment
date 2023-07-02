@@ -17,6 +17,16 @@ class Transaction < ApplicationRecord
     MAX_LIMIT_FOR_CARD = 20000
     TRANSACTION_CHARGE_CURRENT_ACCOUNT = 0.005
 
+    def self.create_transaction(transaction_params, account)
+        transaction = Transaction.new(transaction_params)
+        if(transaction.transaction_type != 'deposit')
+            transaction.amount = -1 * transaction.amount
+        end
+        transaction.account_number = account.account_number
+        transaction.current_balance = account.balance + transaction.amount
+        transaction
+    end
+
     def round_off_to_two_digits
         self.amount = self.amount.round(2)
         self.current_balance = self.current_balance.round(2)
