@@ -90,14 +90,6 @@ class Transaction < ApplicationRecord
             errors.add(:base, "To Account does not exist") if !Account.find_by(account_number: self.account_related)
         end
     end
-
-    def validate_transaction
-        if self.account.account_type == 'saving'
-        elsif self.account.account_type == 'current'
-            errors.add(:base, "To Account does not exist") if !Account.find_by(account_number: self.account_related)
-        elsif self.account.account_type == 'loan'
-        end
-    end
     def get_account_by_account_number(number)
         Account.find_by(account_number: number)
     end
