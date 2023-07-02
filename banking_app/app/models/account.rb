@@ -77,7 +77,7 @@ class Account < ApplicationRecord
             account_value = CalculateAccountValue.call(account_number: account.account_number, month_days:number_of_days_in_month)
             nrv = account_value / number_of_days_in_month
             if account.account_type == 'saving'
-                total_interest = (account_value * (INTEREST_RATE_FOR_SAVING_ACCOUNT/100.0) * (1/365.0)).round(2)
+                total_interest = (account_value * (INTEREST_RATE_FOR_SAVING_ACCOUNT/100.0) * (1/365.0))
                 transaction = Transaction.new(amount:total_interest,account_number:account.account_number, transaction_type: 4,current_balance:account.balance+total_interest)
                 transaction.save
                 if nrv < NRV_SAVING

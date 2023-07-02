@@ -14,7 +14,7 @@
     <% @transactions.each_with_index do |transaction,ind| %>
         <tr>
             <th scope="row"><%= "#{ind+1}" %></th>
-            <td><%= transaction.created_at.strftime("%d-%m-%Y %k:%M") %></td>
+            <td><%= convert_timestamp_to_ist(transaction.created_at).strftime("%d-%m-%Y %k:%M") %></td>
             <td><%= transaction.transaction_type.upcase %></td>
             <td><%= transaction.amount %></td>
             <td><%= transaction.current_balance %></td>

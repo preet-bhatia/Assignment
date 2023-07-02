@@ -1,4 +1,5 @@
 class Transaction < ApplicationRecord
+    before_save :round_off_to_two_digits
     after_save :update_account_balance
     after_save :update_receiver_balance
     after_save :max_transactions_for_card 
@@ -8,12 +9,18 @@ class Transaction < ApplicationRecord
     validate :transfer_account_not_exist
     validate :validity_of_loan_installment
     validate :validate_saving_account_transaction
+    validate :validate_current_account_transaction
     enum transaction_type: { deposit: 0, bank_withdrawal: 1, atm_withdrawal: 2, transfer: 3, charge: 4}
     belongs_to :account, foreign_key: 'account_number', primary_key: 'account_number'
     
     MAX_DAY_LIMIT_SAVING_ACCOUNT = 50000
     MAX_LIMIT_FOR_CARD = 20000
     TRANSACTION_CHARGE_CURRENT_ACCOUNT = 0.005
+
+    def round_off_to_two_digits
+        self.amount = self.amount.round(2)
+        self.current_balance = self.current_balance.round(2)
+    end
     
     def update_account_balance
        self.account.update(balance:self.current_balance)
@@ -29,7 +36,7 @@ class Transaction < ApplicationRecord
         end
     end
     def amount_cannot_be_greater_than_balance
-        if self.transaction_type != "deposit"
+        if self.transaction_type != "deposit" && self.amount < 0
             errors.add(:amount, "can't be greater than account balance") if get_account_by_account_number(self.account_number).balance < self.amount.abs
         end
     end
@@ -53,6 +60,15 @@ class Transaction < ApplicationRecord
             errors.add(:base, " Withdrawal not possible as you already withdrawn #{total_amount} from daily limit of #{MAX_DAY_LIMIT_SAVING_ACCOUNT}") if (total_amount+ self.amount.abs) >  MAX_DAY_LIMIT_SAVING_ACCOUNT
         end
     end
+
+    def validate_current_account_transaction
+        if self.account.account_type == 'current'
+            charge = [TRANSACTION_CHARGE_CURRENT_ACCOUNT * (self.amount.abs), 500].min
+            if ((self.transaction_type == 'bank_withdrawal' || self.transaction_type == 'transfer')  && self.current_balance < charge )
+                errors.add(:base, "Transaction not possible as account does not have enough balance for transaction charge")
+            end
+        end
+    end
    
     def max_transactions_for_card
         if self.account.account_type == 'saving' && self.transaction_type == 'atm_withdrawal'
@@ -65,13 +81,21 @@ class Transaction < ApplicationRecord
     end
     def transaction_charge_current_account
         if self.account.account_type == 'current' && self.transaction_type != 'charge'
-            charge = -[TRANSACTION_CHARGE_CURRENT_ACCOUNT * (self.amount.abs), 500].min.round(2)
+            charge = -[TRANSACTION_CHARGE_CURRENT_ACCOUNT * (self.amount.abs), 500].min
             transaction = Transaction.create(amount:charge,account_number:self.account_number, transaction_type: 4,current_balance:self.current_balance+charge)
         end
     end
     def transfer_account_not_exist
         if self.transaction_type == "transfer"
             errors.add(:base, "To Account does not exist") if !Account.find_by(account_number: self.account_related)
+        end
+    end
+
+    def validate_transaction
+        if self.account.account_type == 'saving'
+        elsif self.account.account_type == 'current'
+            errors.add(:base, "To Account does not exist") if !Account.find_by(account_number: self.account_related)
+        elsif self.account.account_type == 'loan'
         end
     end
     def get_account_by_account_number(number)
