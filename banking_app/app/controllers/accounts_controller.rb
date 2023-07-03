@@ -6,7 +6,6 @@ class AccountsController < ApplicationController
     end
     def create
         @account = Account.new(account_params)
-        @account.customer_id = @current_user.customer_id
         if @account.save
             flash[:notice] = "Congrats , new account created with account number #{@account.account_number}"
             redirect_to @account
@@ -21,6 +20,6 @@ class AccountsController < ApplicationController
     end
     private
     def account_params
-        params.require(:account).permit(:account_type, :balance)
+        params.require(:account).permit(:account_type, :balance).merge(customer_id:@current_user.customer_id)
     end
 end

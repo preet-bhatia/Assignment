@@ -15,7 +15,7 @@ class TransactionsController < ApplicationController
     end
     
     def debit
-        @transaction = Transaction.create_transaction(transaction_params, @current_account)
+        @transaction = Transaction.create_transaction(transaction_params, @current_account.balance)
         if @transaction.save
             flash[:notice] = "Congrats , successfully debited"
             redirect_to @current_account
@@ -30,7 +30,7 @@ class TransactionsController < ApplicationController
     end
     
     def credit
-        @transaction = Transaction.create_transaction(transaction_params, @current_account)
+        @transaction = Transaction.create_transaction(transaction_params, @current_account.balance)
         if @transaction.save
             if @current_account.account_type == 'loan'
                 flash[:notice] = "Congrats , successfully depoisted installment to loan account"
@@ -50,7 +50,7 @@ class TransactionsController < ApplicationController
     private
 
     def transaction_params
-        params.require(:transaction).permit(:transaction_type, :amount,:account_related)
+        params.require(:transaction).permit(:transaction_type, :amount,:account_related).merge(account_number:@current_account.account_number)
     end
 
     def generate_transaction
