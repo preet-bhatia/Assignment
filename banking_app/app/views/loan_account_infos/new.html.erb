@@ -1,0 +1,27 @@
+<h1> Create New Loan Account </h1>
+<div class= "container">
+    <% if @loanaccount.errors.any? %>
+        <h2>The following errors prevented creation of Loan Account</h2>
+        <ul>
+        <% @loanaccount.errors.full_messages.each do |msg|%>
+            <li><%= msg%></li>
+        <%end%>
+        </ul>
+    <%end %>
+
+    <%= form_for (@loanaccount) do |f| %>
+
+        <%= f.label :loan_type%>
+        <%= f.select :loan_type, options_for_select(LoanAccountInfo.loan_types.map {|key, value| [key.titleize, LoanAccountInfo.loan_types.key(value)]}, @loanaccount.loan_type) %>
+
+        <%= f.label :amount%>
+        <%= f.number_field :amount%>
+
+        <%= f.label :duration%>
+        <%= f.number_field :duration%>
+
+        <%= f.submit %>
+
+    <% end %>
+
+</div>

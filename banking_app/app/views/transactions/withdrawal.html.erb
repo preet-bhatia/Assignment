@@ -1,0 +1,19 @@
+<h1> Withdrawal</h1>
+<div class= "container">
+    <%= render 'error' , obj: @transaction %>
+    <h3> Amount will be debited from <%= current_account.account_number %></h3>
+    
+    <%= form_for (@transaction) ,url: { action: 'debit' } do |f| %>
+
+        <%= f.label :transaction_type%>
+        <% transactions_array = current_account.account_type == "saving" ? [["Bank Withdrawal", "bank_withdrawal"], ["Atm Withdrawal", "atm_withdrawal"]] : [["Bank Withdrawal", "bank_withdrawal"]] %>
+        <%= f.select :transaction_type, options_for_select(transactions_array, @transaction.transaction_type) ,prompt: 'Select Withdrawal Type'%>
+
+        <%= f.label :amount%>
+        <%= f.number_field :amount, {min: 1, :step => 0.01}%>
+
+        <%= f.submit %>
+    <% end %>
+
+    <%= link_to "Cancel", account_path(current_account.id)%>
+</div>

@@ -1,0 +1,9 @@
+<br>
+<% if @account.account_type == 'loan'%>
+    <%= render 'loan_details'%>
+<% else %>
+    <%= render 'operations' , obj: @account %>
+    <% if @account.account_type == "saving" %>
+        <%= render 'card' , card: @account.atm_card %>
+    <% end %>
+<% end %>

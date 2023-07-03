@@ -1,0 +1,21 @@
+<h2> Existing Accounts</h2>
+<div class ="container">
+<% @accounts.each_with_index do |account, index| %>
+<div class="row justify-content-md-center">
+<div class="col-8 mt-4">
+  <div class="card text-center shadow mb-5 bg-body-tertiary rounded">
+    <div class="card-header">
+      <%= link_to "Account #{index+1}", account_path(account)%>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title"><%=account.account_number%></h5>
+      <p class="card-text"><%=account.account_type%></p>
+    </div>
+    <div class="card-footer text-body-secondary">
+    <small>Created <%=time_ago_in_words(account.created_at)%> ago</small>
+    </div>
+  </div>
+</div>
+</div>
+<%end%>
+</div>

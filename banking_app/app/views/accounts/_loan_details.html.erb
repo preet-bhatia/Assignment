@@ -1,0 +1,15 @@
+<div class= "container">
+    <div class="card">
+        <h5 class="card-header">Loan Account Details</h5>
+        <div class="card-body">
+            <h5 class="card-title">Loan Account Number: <%= @account.account_number%></h5>
+            <p class="card-text">Duration: <%= @account.loan_account_info.duration %> year</p>
+            <p class="card-text">Amount: <%= @account.loan_account_info.amount %></p>
+            <p class="card-text">Type: <%=@account.loan_account_info.loan_type.capitalize%></p>
+            <p class="card-text">Total Amount Deposited : <%=@account.balance%></p>
+        </div>
+    </div>
+    <%= link_to "Deposit Money", credit_path%>
+    <br>
+    <%= link_to "View Passbook for loan account",transactions_path%>
+</div>

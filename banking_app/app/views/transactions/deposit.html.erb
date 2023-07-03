@@ -1,0 +1,20 @@
+<h1> Deposit</h1>
+<div class= "container">
+
+    <%= render 'error' , obj: @transaction %>
+    <h3> Amount will be credited to <%= current_account.account_number %></h3>
+    <%= form_for (@transaction) ,  url: { action: 'credit' } do |f| %>
+
+        <%= f.label :transaction_type%>
+        <% transactions_array = [["Deposit", "deposit"]] %>
+        <%= f.select :transaction_type, options_for_select(transactions_array, @transaction.transaction_type) %>
+
+        <%= f.label :amount%>
+        <%= f.number_field :amount, {min: 1, :step => 0.01}%>
+
+        <%= f.submit %>
+    <% end %>
+
+    <%= link_to "Cancel", account_path(current_account.id)%>
+
+</div>
